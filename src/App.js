@@ -4,6 +4,7 @@ import Signup from "./pages/Signup";
 import TaskList from "./pages/TaskList";
 import AddTask from "./pages/AddTask";
 import { isAuthenticated } from "./utils/auth";
+import TaskPage from "./pages/TaskPage";
 
 function App() {
   return (
@@ -11,7 +12,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/tasks" element={isAuthenticated() ? <TaskList /> : <Navigate to="/login" />} />
+        <Route path="/tasks" element={isAuthenticated() ? <TaskPage /> : <Navigate to="/login" />} />
         <Route path="/add-task" element={isAuthenticated() ? <AddTask /> : <Navigate to="/login" />} />
         <Route path="*" element={<Navigate to="/login" />} />
       </Routes>
