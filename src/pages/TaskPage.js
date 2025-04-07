@@ -9,34 +9,33 @@ function TaskPage() {
   const [tasks, setTasks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState("");
+  const [refreshTrigger, setRefreshTrigger] = useState(false); // 🔁 trigger state
+
+  const fetchTasks = async () => {
+    const userId = localStorage.getItem("userId");
+    if (!userId) return navigate("/login");
+
+    try {
+      const res = await fetch(`https://lemonpaybackend.onrender.com/api/tasks/get`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ userId }),
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.msg || "Failed to load tasks");
+
+      setTasks(data);
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   useEffect(() => {
-    const fetchTasks = async () => {
-      const userId = localStorage.getItem("userId");
-
-      // If not logged in, redirect
-      if (!userId) return navigate("/login");
-
-      try {
-        const res = await fetch(`https://lemonpaybackend.onrender.com/api/tasks/get`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ userId }),
-        });
-
-        const data = await res.json();
-        if (!res.ok) throw new Error(data.msg || "Failed to load tasks");
-
-        setTasks(data);
-      } catch (err) {
-        setError(err.message);
-      }
-    };
-
     fetchTasks();
-  }, [navigate]);
+  }, [navigate, refreshTrigger]); // 🔁 refresh when trigger changes
 
   const totalPages = Math.ceil(tasks.length / tasksPerPage);
   const indexOfLastTask = currentPage * tasksPerPage;
@@ -47,6 +46,11 @@ function TaskPage() {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
+  };
+
+  // 🔥 Trigger reload on delete
+  const onDeleteTask = () => {
+    setRefreshTrigger((prev) => !prev); // toggle to trigger useEffect
   };
 
   return (
@@ -60,7 +64,7 @@ function TaskPage() {
 
       {error && <p style={{ color: "red" }}>{error}</p>}
 
-      <TaskTable tasks={currentTasks} />
+      <TaskTable tasks={currentTasks} onDeleteTask={onDeleteTask} />
 
       {totalPages > 1 && (
         <div className="pagination">

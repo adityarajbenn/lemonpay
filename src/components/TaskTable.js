@@ -1,6 +1,6 @@
 import DropdownMenu from "./DropdownMenu";
 
-function TaskTable({ tasks }) {
+function TaskTable({ tasks, onDeleteTask }) {
   return (
     <div className="task-table">
       <table>
@@ -15,13 +15,16 @@ function TaskTable({ tasks }) {
         </thead>
         <tbody>
           {tasks.map((task, i) => (
-            <tr key={task.id}>
+            <tr key={task._id}>
               <td>{i + 1}</td>
               <td>{new Date(task.dueDate).toLocaleString()}</td>
               <td>{task.taskName}</td>
               <td>{task.description}</td>
               <td>
-                <DropdownMenu taskId={task.id} />
+                <DropdownMenu
+                  taskId={task._id}
+                  onDelete={onDeleteTask}
+                />
               </td>
             </tr>
           ))}
