@@ -6,13 +6,38 @@ function Signup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!email || !password || password !== confirm) return;
-    localStorage.setItem("token", "signup-token");
-    navigate("/tasks");
+    setError("");
+
+    if (!email || !password || password !== confirm) {
+      setError("Please fill all fields and make sure passwords match.");
+      return;
+    }
+
+    try {
+      const res = await fetch("http://localhost:5000/api/auth/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.msg || "Signup failed");
+      }
+
+      localStorage.setItem("userId", data.userId);
+      navigate("/tasks");
+    } catch (err) {
+      setError(err.message);
+    }
   };
 
   return (
@@ -22,6 +47,7 @@ function Signup() {
       alternateLink={{ text: "Sign In", href: "/login" }}
       onSubmit={handleSubmit}
     >
+      {error && <p style={{ color: "red" }}>{error}</p>}
       <input
         type="email"
         placeholder="Email"

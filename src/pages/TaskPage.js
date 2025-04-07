@@ -18,7 +18,7 @@ function TaskPage() {
       if (!userId) return navigate("/login");
 
       try {
-        const res = await fetch("http://localhost:5000/api/tasks", {
+        const res = await fetch("http://localhost:5000/api/tasks/get", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

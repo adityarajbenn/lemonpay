@@ -17,8 +17,8 @@ function TaskTable({ tasks }) {
           {tasks.map((task, i) => (
             <tr key={task.id}>
               <td>{i + 1}</td>
-              <td>{task.dateTime}</td>
-              <td>{task.title}</td>
+              <td>{new Date(task.dueDate).toLocaleString()}</td>
+              <td>{task.taskName}</td>
               <td>{task.description}</td>
               <td>
                 <DropdownMenu taskId={task.id} />
