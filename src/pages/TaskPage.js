@@ -18,7 +18,7 @@ function TaskPage() {
       if (!userId) return navigate("/login");
 
       try {
-        const res = await fetch("http://localhost:5000/api/tasks/get", {
+        const res = await fetch(`https://lemonpaybackend.onrender.com/api/tasks/get`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",

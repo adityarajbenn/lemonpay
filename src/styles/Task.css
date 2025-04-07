@@ -11,12 +11,13 @@
   }
   
   .task-header h2 {
-    font-size: 26px;
-    color: #0039cc;
+    font-size: 36px;
+    font-weight: 600;
+    color: #1E3BA3;
   }
   
   .add-task-btn {
-    background-color: #0039cc;
+    background-color: #1E3BA3;
     color: white;
     padding: 10px 20px;
     border-radius: 30px;
@@ -36,7 +37,18 @@
     padding: 12px;
     border-bottom: 1px solid #eee;
   }
-  
+
+  .task-table th {
+    font-size: 20px;
+    font-weight: 600;
+    color:#1E3BA3;
+  }
+
+  .task-table tbody>tr {
+    height: 107px;
+    padding: 5px;
+  }
+
   .pagination {
     display: flex;
     justify-content: center;
@@ -138,7 +150,7 @@
   }
   
   .btn-save {
-    background-color: #0039cc;
+    background-color: #1E3BA3;
     color: white;
     padding: 10px 24px;
     border-radius: 20px;
