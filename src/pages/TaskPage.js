@@ -1,56 +1,47 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import TaskTable from "../components/TaskTable";
 import "../styles/Task.css";
 import { useNavigate } from "react-router-dom";
 
-const mockTasks = [
-  {
-    id: 1,
-    dateTime: "2/02/2024 2:00 PM",
-    title: "Design Navaratri poster",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero.",
-  },
-  {
-    id: 2,
-    dateTime: "2/02/2024 2:00 PM",
-    title: "Design Navaratri poster",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero.",
-  },
-  {
-    id: 3,
-    dateTime: "2/02/2024 2:00 PM",
-    title: "Design Navaratri poster",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero.",
-  },
-  {
-    id: 4,
-    dateTime: "2/02/2024 2:00 PM",
-    title: "Design Navaratri poster",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero.",
-  },
-  {
-    id: 5,
-    dateTime: "2/02/2024 2:00 PM",
-    title: "Design Navaratri poster",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero.",
-  },
-  {
-    id: 6,
-    dateTime: "2/02/2024 2:00 PM",
-    title: "Design Navaratri poster",
-    description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc vulputate libero.",
-  },
-];
-
 function TaskPage() {
+  const navigate = useNavigate();
   const tasksPerPage = 5;
+  const [tasks, setTasks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(mockTasks.length / tasksPerPage);
+  const [error, setError] = useState("");
 
+  useEffect(() => {
+    const fetchTasks = async () => {
+      const userId = localStorage.getItem("userId");
+
+      // If not logged in, redirect
+      if (!userId) return navigate("/login");
+
+      try {
+        const res = await fetch("http://localhost:5000/api/tasks", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ userId }),
+        });
+
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.msg || "Failed to load tasks");
+
+        setTasks(data);
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchTasks();
+  }, [navigate]);
+
+  const totalPages = Math.ceil(tasks.length / tasksPerPage);
   const indexOfLastTask = currentPage * tasksPerPage;
   const indexOfFirstTask = indexOfLastTask - tasksPerPage;
-  const currentTasks = mockTasks.slice(indexOfFirstTask, indexOfLastTask);
-  const navigate = useNavigate();
+  const currentTasks = tasks.slice(indexOfFirstTask, indexOfLastTask);
 
   const handlePageChange = (page) => {
     if (page >= 1 && page <= totalPages) {
@@ -63,10 +54,11 @@ function TaskPage() {
       <div className="task-header">
         <h2>Tasks Management</h2>
         <button className="add-task-btn" onClick={() => navigate("/add-task")}>
-          <span>＋</span> Add Task
+          ＋ Add Task
         </button>
-
       </div>
+
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
       <TaskTable tasks={currentTasks} />
 

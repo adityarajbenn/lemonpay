@@ -16,8 +16,12 @@ function AuthLayout({
         {/* LEFT SECTION */}
         <div className="login-left">
           <img src="/logo.png" alt="Lemonpay Logo" />
-          <h2>Join 8 Million Businesses</h2>
-          <p>Powering Growth with Lemonpay!</p>
+          <div style={{ marginTop: "max(50px, 200px)", textAlign: "left" }}>
+            <p>Join 8 Million Businesses</p>
+            <p style={{ color: "#DBD55B" }}>Powering Growth with </p>
+            <p>Lemonpay!</p>
+          </div>
+
         </div>
 
         {/* RIGHT SECTION */}

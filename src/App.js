@@ -1,7 +1,6 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import TaskList from "./pages/TaskList";
 import AddTask from "./pages/AddTask";
 import { isAuthenticated } from "./utils/auth";
 import TaskPage from "./pages/TaskPage";
