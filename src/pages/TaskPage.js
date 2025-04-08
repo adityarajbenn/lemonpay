@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import TaskTable from "../components/TaskTable";
 import "../styles/Task.css";
 import { useNavigate } from "react-router-dom";
@@ -9,33 +9,32 @@ function TaskPage() {
   const [tasks, setTasks] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [error, setError] = useState("");
-  const [refreshTrigger, setRefreshTrigger] = useState(false); // 🔁 trigger state
+  const [refreshTrigger, setRefreshTrigger] = useState(false);
 
-  const fetchTasks = async () => {
+  const fetchTasks = useCallback(async () => {
     const userId = localStorage.getItem("userId");
     if (!userId) return navigate("/login");
-
+  
     try {
       const res = await fetch(`https://lemonpaybackend.onrender.com/api/tasks/get`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId }),
       });
-
+  
       const data = await res.json();
       if (!res.ok) throw new Error(data.msg || "Failed to load tasks");
-
+  
       setTasks(data);
     } catch (err) {
       setError(err.message);
     }
-  };
-
+  }, [navigate]);
+  
   useEffect(() => {
     fetchTasks();
-  }, [navigate, refreshTrigger]);
+  }, [fetchTasks,refreshTrigger]);
+  
 
   const totalPages = Math.ceil(tasks.length / tasksPerPage);
   const indexOfLastTask = currentPage * tasksPerPage;
@@ -48,7 +47,6 @@ function TaskPage() {
     }
   };
 
-  // 🔥 Trigger reload on delete
   const onDeleteTask = () => {
     setRefreshTrigger((prev) => !prev); // toggle to trigger useEffect
   };
