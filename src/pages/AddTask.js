@@ -1,13 +1,16 @@
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import "../styles/Task.css";
-import { useNavigate } from "react-router-dom";
 
 function AddTask() {
-  const [task, setTask] = useState("");
-  const [description, setDescription] = useState("");
-  const [date, setDate] = useState("");
-  const [error, setError] = useState("");
+  const location = useLocation();
   const navigate = useNavigate();
+
+  const editMode = location.state?.taskId;
+  const [task, setTask] = useState(location.state?.taskName || "");
+  const [description, setDescription] = useState(location.state?.description || "");
+  const [date, setDate] = useState(location.state?.dueDate?.slice(0, 16) || "");
+  const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,8 +28,14 @@ function AddTask() {
     }
 
     try {
-      const res = await fetch(`https://lemonpaybackend.onrender.com/api/tasks`, {
-        method: "POST",
+      const url = editMode
+        ? `https://lemonpaybackend.onrender.com/api/tasks/${location.state.taskId}`
+        : `https://lemonpaybackend.onrender.com/api/tasks`;
+
+      const method = editMode ? "PUT" : "POST";
+
+      const res = await fetch(url, {
+        method,
         headers: {
           "Content-Type": "application/json",
         },
@@ -41,7 +50,7 @@ function AddTask() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.msg || "Failed to create task");
 
-      navigate("/tasks"); // ✅ redirect after success
+      navigate("/tasks");
     } catch (err) {
       setError(err.message);
     }
@@ -50,7 +59,7 @@ function AddTask() {
   return (
     <div className="modal-overlay">
       <div className="modal-box">
-        <h3>Add Task</h3>
+        <h3>{editMode ? "Edit Task" : "Add Task"}</h3>
         <form onSubmit={handleSubmit}>
           {error && <p style={{ color: "red" }}>{error}</p>}
 
@@ -73,7 +82,9 @@ function AddTask() {
           />
 
           <div className="modal-actions">
-            <button type="submit" className="btn-save">Save</button>
+            <button type="submit" className="btn-save">
+              {editMode ? "Update" : "Save"}
+            </button>
             <button
               type="button"
               onClick={() => navigate("/tasks")}

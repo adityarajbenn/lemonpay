@@ -21,7 +21,7 @@ function TaskTable({ tasks, onDeleteTask }) {
           <div className="task-card" key={task._id}>
             <div className="task-card-header">
               <h4>{task.taskName}</h4>
-              <DropdownMenu taskId={task._id} onDelete={onDeleteTask} />
+              <DropdownMenu task={task} onDelete={onDeleteTask} />
             </div>
             <p>{task.description}</p>
             <p>{new Date(task.dueDate).toLocaleString()}</p>
@@ -52,7 +52,7 @@ function TaskTable({ tasks, onDeleteTask }) {
               <td>{task.taskName}</td>
               <td>{task.description}</td>
               <td>
-                <DropdownMenu taskId={task._id} onDelete={onDeleteTask} />
+                <DropdownMenu task={task} onDelete={onDeleteTask} />
               </td>
             </tr>
           ))}

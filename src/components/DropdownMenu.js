@@ -1,6 +1,9 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-function DropdownMenu({ taskId, onDelete }) {
+function DropdownMenu({ task, onDelete }) {
+  const taskId = task?._id;
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
 
   const toggle = () => setOpen(!open);
@@ -33,7 +36,16 @@ function DropdownMenu({ taskId, onDelete }) {
       <button className="dots" onClick={toggle}>⋮</button>
       {open && (
         <div className="dropdown-menu">
-          <button disabled onClick={() => alert("Edit " + taskId)}>Edit</button>
+          <button onClick={() => navigate("/add-task", {
+            state: {
+              taskId,
+              taskName: task?.taskName,
+              description: task?.description,
+              dueDate: task?.dueDate
+            }
+          })}>
+            Edit
+          </button>
           <button onClick={handleDelete}>Delete</button>
         </div>
       )}
