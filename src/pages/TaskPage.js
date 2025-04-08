@@ -35,7 +35,7 @@ function TaskPage() {
 
   useEffect(() => {
     fetchTasks();
-  }, [navigate, refreshTrigger]); // 🔁 refresh when trigger changes
+  }, [navigate, refreshTrigger]);
 
   const totalPages = Math.ceil(tasks.length / tasksPerPage);
   const indexOfLastTask = currentPage * tasksPerPage;
@@ -56,10 +56,14 @@ function TaskPage() {
   return (
     <div className="task-page">
       <div className="task-header">
-        <h2>Tasks Management</h2>
-        <button className="add-task-btn" onClick={() => navigate("/add-task")}>
-          ＋ Add Task
-        </button>
+      <div style={{display:'flex',justifyContent:'flex-start'}}>
+          <h2>Tasks Management</h2>
+        </div>
+        <div style={{display:'flex',justifyContent:'flex-end'}}>
+          <button className="add-task-btn" onClick={() => navigate("/add-task")}>
+            ＋ Add Task
+          </button>
+        </div>
       </div>
 
       {error && <p style={{ color: "red" }}>{error}</p>}
