@@ -195,3 +195,67 @@ body {
 .login-form button:hover {
   background-color: #f1f1f1;
 }
+
+
+@media (max-width: 768px) {
+  .login-container {
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 100vh;
+  }
+
+  .login-left, .login-right {
+    flex: unset;
+    width: 100%;
+    padding: 20px;
+    text-align: left;
+    align-items: left;
+  }
+
+  .login-left img {
+    width: 180px;
+    margin: 0 auto 20px 85px;
+  }
+
+  .login-left p {
+    font-size: 24px;
+    text-align: center;
+  }
+
+  .login-form {
+    width: 100%;
+    max-width: 100%;
+    padding: 20px;
+  }
+
+  .login-form h2 {
+    font-size: 24px;
+  }
+
+  .login-form p {
+    font-size: 16px;
+  }
+
+  .login-form input[type="email"],
+  .login-form input[type="password"] {
+    width: 90%;
+    font-size: 14px;
+  }
+
+  .login-form button {
+    width: 100%;
+    font-size: 16px;
+  }
+
+  .login-form .checkbox-group {
+    gap: 10px;
+  }
+
+  .login-left div{
+    display: none;
+  }
+
+  .login-right {
+    padding: 0px;
+  }
+}
